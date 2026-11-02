@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b3d5c">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Pescador">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <title>Conversa de Pescador</title>
+  <style>
+    :root{--bg1:#0b3d5c;--bg2:#06263a;--ink:#0d2233;--accent:#ffb703;--red:#e63946;--blue:#219ebc;--green:#2a9d8f}
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;min-height:100%}
+    body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:linear-gradient(180deg,var(--bg1),var(--bg2)) fixed;color:#fff}
+    #app{max-width:520px;margin:0 auto;padding:20px 16px calc(28px + env(safe-area-inset-bottom));min-height:100vh;display:flex;flex-direction:column;gap:14px}
+    h1{font-size:2rem;margin:.2em 0;text-align:center}
+    h2{margin:.2em 0;font-size:1.35rem}
+    h3{margin:.2em 0}
+    .center{text-align:center}
+    .sub{color:#bcd4e6;text-align:center;margin:0}
+    .big{font-size:3.2rem;text-align:center;line-height:1.2}
+    .card{background:#fff;color:var(--ink);border-radius:18px;padding:16px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+    .btn{display:block;width:100%;border:0;border-radius:14px;padding:16px;font-size:1.08rem;font-weight:700;cursor:pointer;background:var(--accent);color:#1d1d1d;transition:transform .08s}
+    .btn:active{transform:scale(.97)}
+    .btn.sec{background:rgba(255,255,255,.15);color:#fff}
+    .btn.ghost{background:#e9f0f5;color:var(--ink)}
+    .btn.blue{background:var(--blue);color:#fff}
+    .btn.red{background:var(--red);color:#fff}
+    .btn.green{background:var(--green);color:#fff}
+    .btn:disabled{opacity:.4}
+    .col{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+    .row{display:flex;gap:8px}
+    input[type=text]{flex:1;padding:14px;border-radius:12px;border:2px solid #cfe0ec;font-size:1rem;color:var(--ink)}
+    input[type=text]:focus{outline:none;border-color:var(--blue)}
+    .chips{display:flex;flex-wrap:wrap;gap:8px}
+    .chip{padding:8px 12px;border-radius:999px;border:2px solid var(--blue);background:#fff;color:var(--blue);font-weight:600;font-size:.92rem}
+    .chip.on{background:var(--blue);color:#fff}
+    .plist{list-style:none;padding:0;margin:8px 0 4px}
+    .plist li{display:flex;justify-content:space-between;align-items:center;padding:10px 4px;border-bottom:1px solid #e6eef4}
+    .x{background:none;border:0;font-size:1.2rem;color:var(--red);cursor:pointer}
+    .check{display:flex;gap:10px;align-items:flex-start;margin-top:12px;font-size:.95rem}
+    .check input{width:22px;height:22px;flex-shrink:0}
+    .q{font-size:1.25rem;font-weight:700;line-height:1.35;margin:.3em 0 .5em}
+    .tag{display:inline-block;background:#e8f4fa;color:var(--blue);border-radius:8px;padding:3px 8px;font-size:.8rem;font-weight:700}
+    .status{display:flex;justify-content:space-between;align-items:center;padding:16px;border-radius:14px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.15);font-size:1.1rem;font-weight:600;color:#fff;width:100%;cursor:pointer}
+    .status.ok{border-color:var(--green);background:rgba(42,157,143,.3)}
+    .opt{display:block;width:100%;text-align:left;padding:14px;border-radius:12px;border:2px solid #cfe0ec;background:#f6fbff;font-size:1rem;margin-bottom:8px;color:var(--ink);cursor:pointer}
+    .opt.sel{border-color:var(--accent);background:#fff4d6}
+    .link{background:none;border:0;color:var(--blue);font-weight:700;padding:4px 0 14px;cursor:pointer;font-size:.95rem}
+    .papel.azul{border:4px solid var(--blue)}
+    .papel.vermelho{border:4px solid var(--red)}
+    .resposta-certa{background:#dff3fb;border-radius:12px;padding:12px;margin:8px 0;color:var(--ink)}
+    .resposta-certa.grande{font-size:1.4rem;font-weight:800;text-align:center}
+    .pend{background:rgba(255,183,3,.18);border:2px solid var(--accent);border-radius:14px;padding:12px;text-align:center}
+    .ans{display:block;width:100%;text-align:left;background:#fff;color:var(--ink);border:3px solid transparent;border-radius:16px;padding:14px 16px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.2)}
+    .ans .nome{font-weight:800;color:var(--blue);display:flex;justify-content:space-between;gap:8px}
+    .ans .resp{font-size:1.15rem;margin-top:4px}
+    .ans.fake{background:#ffe3e5;border-color:var(--red);opacity:.85}
+    .selo{font-size:.8rem;font-weight:800;white-space:nowrap}
+    .linha-resp{display:flex;justify-content:space-between;gap:8px;padding:10px;border-radius:10px;margin-top:6px;background:#f3f7fa}
+    .linha-resp.real{background:#dff3fb}
+    .linha-resp.fake{background:#ffe3e5}
+    .score{display:flex;justify-content:space-between;padding:10px 4px;border-bottom:1px solid #e6eef4}
+    .score.win{font-weight:800;color:#b07d00}
+    .ganho{background:var(--green);color:#fff;border-radius:8px;padding:1px 6px;font-size:.8rem}
+    .mini{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+    .mini span{background:rgba(255,255,255,.12);border-radius:999px;padding:5px 10px;font-size:.85rem}
+    .centro-tela{flex:1;display:flex;flex-direction:column;justify-content:center;gap:14px}
+    .regras p{margin:.5em 0;line-height:1.45}
+    .hidden{display:none!important}
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;padding:20px;z-index:10}
+    .modal .card{max-width:420px;width:100%}
+    #toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(150%);background:#111;color:#fff;padding:12px 18px;border-radius:12px;max-width:90vw;text-align:center;transition:transform .25s;z-index:30}
+    #toast.show{transform:translateX(-50%) translateY(0)}
+    .confete{position:fixed;top:-40px;pointer-events:none;z-index:20;animation:cair 3.2s linear forwards}
+    @keyframes cair{to{transform:translateY(115vh) rotate(540deg)}}
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <div id="modal" class="modal hidden"></div>
+  <div id="toast"></div>
+  <script src="perguntas.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
